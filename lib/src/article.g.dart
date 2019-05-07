@@ -33,17 +33,24 @@ class _$ArticleSerializer implements StructuredSerializer<Article> {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
+      'time',
+      serializers.serialize(object.time, specifiedType: const FullType(int)),
+      'type',
+      serializers.serialize(object.type, specifiedType: const FullType(String)),
+      'url',
+      serializers.serialize(object.url, specifiedType: const FullType(String)),
+      'title',
+      serializers.serialize(object.title,
+          specifiedType: const FullType(String)),
+      'kids',
+      serializers.serialize(object.kids,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(int)])),
     ];
     if (object.score != null) {
       result
         ..add('score')
         ..add(serializers.serialize(object.score,
-            specifiedType: const FullType(int)));
-    }
-    if (object.time != null) {
-      result
-        ..add('time')
-        ..add(serializers.serialize(object.time,
             specifiedType: const FullType(int)));
     }
     if (object.descendants != null) {
@@ -58,28 +65,10 @@ class _$ArticleSerializer implements StructuredSerializer<Article> {
         ..add(serializers.serialize(object.poll,
             specifiedType: const FullType(int)));
     }
-    if (object.type != null) {
-      result
-        ..add('type')
-        ..add(serializers.serialize(object.type,
-            specifiedType: const FullType(String)));
-    }
-    if (object.url != null) {
-      result
-        ..add('url')
-        ..add(serializers.serialize(object.url,
-            specifiedType: const FullType(String)));
-    }
     if (object.by != null) {
       result
         ..add('by')
         ..add(serializers.serialize(object.by,
-            specifiedType: const FullType(String)));
-    }
-    if (object.title != null) {
-      result
-        ..add('title')
-        ..add(serializers.serialize(object.title,
             specifiedType: const FullType(String)));
     }
     if (object.parent != null) {
@@ -87,13 +76,6 @@ class _$ArticleSerializer implements StructuredSerializer<Article> {
         ..add('parent')
         ..add(serializers.serialize(object.parent,
             specifiedType: const FullType(String)));
-    }
-    if (object.kids != null) {
-      result
-        ..add('kids')
-        ..add(serializers.serialize(object.kids,
-            specifiedType:
-                const FullType(BuiltList, const [const FullType(int)])));
     }
     if (object.parts != null) {
       result
@@ -247,6 +229,21 @@ class _$Article extends Article {
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Article', 'id');
+    }
+    if (time == null) {
+      throw new BuiltValueNullFieldError('Article', 'time');
+    }
+    if (type == null) {
+      throw new BuiltValueNullFieldError('Article', 'type');
+    }
+    if (url == null) {
+      throw new BuiltValueNullFieldError('Article', 'url');
+    }
+    if (title == null) {
+      throw new BuiltValueNullFieldError('Article', 'title');
+    }
+    if (kids == null) {
+      throw new BuiltValueNullFieldError('Article', 'kids');
     }
   }
 
@@ -439,7 +436,7 @@ class ArticleBuilder implements Builder<Article, ArticleBuilder> {
               by: by,
               title: title,
               parent: parent,
-              kids: _kids?.build(),
+              kids: kids.build(),
               parts: _parts?.build(),
               deleted: deleted,
               dead: dead);
@@ -447,7 +444,7 @@ class ArticleBuilder implements Builder<Article, ArticleBuilder> {
       String _$failedField;
       try {
         _$failedField = 'kids';
-        _kids?.build();
+        kids.build();
         _$failedField = 'parts';
         _parts?.build();
       } catch (e) {
