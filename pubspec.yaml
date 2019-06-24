@@ -12,6 +12,7 @@ dependencies:
   built_value: '>=5.5.5 <7.0.0'
   http: ^0.12.0+2
   rxdart: any
+  font_awesome_flutter: any
 
   flutter_localizations:
     sdk: flutter

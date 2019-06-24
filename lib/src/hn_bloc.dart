@@ -5,24 +5,49 @@ import 'package:flutter_app/json_parsing.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
+enum StoriesType {
+  topStories,
+  newStories,
+}
+
 class HackerNewsBloc {
-
-  Stream<UnmodifiableListView<Article>> get articles => _articlesSubject.stream;
-
   final _articlesSubject = BehaviorSubject<UnmodifiableListView<Article>>();
 
   var _articles = List<Article>();
 
+  Stream<bool> get isLoading => _isLoadingSubject.stream;
+  final _isLoadingSubject = BehaviorSubject<bool>();
+
+  Stream<UnmodifiableListView<Article>> get articles => _articlesSubject.stream;
+
+  static List<int> _newIds = [19836922, 19835608, 19812705, 19836148];
+  static List<int> _topIds = [19835615, 19836028, 19837216, 19818466, 19835962];
+
+  Sink<StoriesType> get storiesType => _storiesTypeController.sink;
+  final _storiesTypeController = StreamController<StoriesType>();
+
   HackerNewsBloc() {
-    _updateArticles().then((_) {
-      _articlesSubject.add(UnmodifiableListView(_articles));
+    _getArticlesAndUpdate(_topIds);
+
+    _storiesTypeController.stream.listen((storiesType) {
+      if (storiesType == StoriesType.newStories) {
+        _getArticlesAndUpdate(_newIds);
+      } else {
+        _getArticlesAndUpdate(_topIds);
+      }
     });
   }
 
-  List<int> _ids = [19836922, 19835608, 19812705, 19836148, 19835615, 19836028, 19837216, 19818466, 19835962];
+  _getArticlesAndUpdate(List<int> ids) async {
+    _isLoadingSubject.add(true);
+    _updateArticles(ids).then((_) {
+      _articlesSubject.add(UnmodifiableListView(_articles));
+      _isLoadingSubject.add(false);
+    });
+  }
 
-  Future<Null> _updateArticles() async {
-    final futureArticles = _ids.map((id) => _getArticle(id));
+  Future<Null> _updateArticles(List<int> articlesIds) async {
+    final futureArticles = articlesIds.map((id) => _getArticle(id));
     final articles = await Future.wait(futureArticles);
     _articles = articles;
   }
